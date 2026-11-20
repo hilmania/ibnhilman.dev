@@ -1,0 +1,42 @@
+---
+import { getCollection } from "astro:content";
+import Page from "../../layouts/Page.astro";
+
+const work = (await getCollection("work", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+<Page
+  eyebrow="Work"
+  title="Case studies"
+  lede="What the problem was, what I decided and why, and what changed afterwards."
+>
+  {work.length === 0 ? (
+    <p class="muted">Studi kasus pertama terbit setelah proyek berjalan. Hapus blok ini begitu ada isinya.</p>
+  ) : (
+    <ul class="list">
+      {work.map((w) => (
+        <li>
+          <a href={`/work/${w.id}`}>
+            <p class="label">{w.data.industry} · {w.data.duration}</p>
+            <h2>{w.data.title}</h2>
+            <p class="muted">{w.data.result}</p>
+            <p class="mono tags">{w.data.stack.join(" · ")}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+</Page>
+
+<style>
+  .list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 18px; }
+  .list a {
+    display: flex; flex-direction: column; gap: 7px;
+    text-decoration: none; color: inherit;
+    border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    background: var(--surface); padding: 20px; border-radius: 2px;
+  }
+  .list a:hover { background: var(--sunk); }
+  .tags { font-size: 11px; color: var(--accent); }
+</style>

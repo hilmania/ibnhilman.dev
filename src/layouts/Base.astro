@@ -1,0 +1,39 @@
+---
+import Head from "../components/Head.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+const { title, description, noindex } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <Head title={title} description={description} noindex={noindex} />
+  </head>
+  <body>
+    <a href="#main" class="skip">Lewati ke konten</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <style>
+      .skip {
+        position: absolute;
+        left: -9999px;
+        background: var(--accent);
+        color: var(--accent-ink);
+        padding: 10px 16px;
+        z-index: 50;
+      }
+      .skip:focus { left: 10px; top: 10px; }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,28 @@
+---
+import Page from "../layouts/Page.astro";
+import LeadForm from "../components/LeadForm.astro";
+import { site } from "../site.config";
+---
+<Page
+  eyebrow="Book"
+  title={`Book a free ${site.booking.durationMinutes}-minute discovery call`}
+  lede="Isi formulir singkat ini dulu supaya saya datang dengan pertanyaan yang tepat, bukan pertanyaan dasar."
+>
+  <ol class="how">
+    <li><b>Isi formulir.</b> Dua menit. Ini yang menentukan apakah saya orang yang tepat untuk masalah Anda.</li>
+    <li><b>Pilih jadwal.</b> Tautan kalender muncul setelah formulir terkirim.</li>
+    <li><b>Terima ringkasan tertulis.</b> Apa pun hasilnya, Anda dapat catatan tertulis setelah call.</li>
+  </ol>
+
+  <LeadForm />
+
+  <p class="alt muted">
+    Lebih suka email langsung? <span class="mono">{site.email}</span> — biasanya dibalas dalam {site.stats.responseHours} jam ({site.timezone}).
+  </p>
+</Page>
+
+<style>
+  .how { padding-left: 1.2em; margin: 0 0 40px; display: flex; flex-direction: column; gap: 10px; max-width: var(--measure); color: var(--muted); }
+  .how b { color: var(--fg); }
+  .alt { margin-top: 32px; font-size: 14.5px; }
+</style>

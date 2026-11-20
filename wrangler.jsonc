@@ -1,0 +1,17 @@
+{
+  // Konfigurasi Cloudflare. Adapter Astro yang mengurus build output,
+  // jadi JANGAN menambahkan "main" atau "assets" di sini — keduanya diisi otomatis.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "personal-site",
+  "compatibility_date": "2026-01-01",
+  "compatibility_flags": ["nodejs_compat"]
+
+  // Setelah membuat D1 untuk menyimpan lead:
+  //   npx wrangler d1 create leads
+  //   npx wrangler d1 execute leads --remote --file=./schema.sql
+  // lalu tempel di sini:
+  //
+  // "d1_databases": [
+  //   { "binding": "DB", "database_name": "leads", "database_id": "..." }
+  // ]
+}

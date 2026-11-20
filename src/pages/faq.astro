@@ -1,0 +1,19 @@
+---
+import Page from "../layouts/Page.astro";
+import { faq } from "../site.config";
+---
+<Page eyebrow="FAQ" title="Questions" lede="Hal yang paling sering ditanyakan sebelum kita mulai bekerja sama.">
+  <div class="list">
+    {faq.map((item) => (
+      <div class="qa">
+        <h2>{item.q}</h2>
+        <p class="muted measure">{item.a}</p>
+      </div>
+    ))}
+  </div>
+</Page>
+
+<style>
+  .list { display: flex; flex-direction: column; gap: 26px; }
+  .qa h2 { font-size: 18px; margin-bottom: 6px; }
+</style>

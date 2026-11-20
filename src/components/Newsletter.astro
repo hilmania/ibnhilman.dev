@@ -1,0 +1,27 @@
+---
+import { site } from "../site.config";
+---
+<aside class="box" id="newsletter">
+  <p class="label">Newsletter</p>
+  <p class="pitch">
+    Catatan mingguan tentang membangun software B2B — apa yang jalan, apa yang rusak,
+    dan template yang saya pakai. Satu email per minggu, berhenti kapan saja.
+  </p>
+  {site.newsletter.embedUrl ? (
+    <a class="btn btn-solid" href={site.newsletter.embedUrl} rel="noopener">Berlangganan</a>
+  ) : (
+    <p class="mono todo">
+      Tempel tautan beehiiv atau Substack Anda di <code>site.config.ts → newsletter.embedUrl</code>.
+    </p>
+  )}
+</aside>
+
+<style>
+  .box {
+    margin-top: 52px; padding: 22px; background: var(--sunk); border-radius: 2px;
+    display: flex; flex-direction: column; gap: 12px; align-items: flex-start;
+    max-width: var(--measure);
+  }
+  .pitch { font-size: 15px; color: var(--muted); }
+  .todo { font-size: 11.5px; color: var(--muted); }
+</style>

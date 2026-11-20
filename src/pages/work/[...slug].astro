@@ -1,0 +1,38 @@
+---
+import { getCollection, render } from "astro:content";
+import Page from "../../layouts/Page.astro";
+
+export async function getStaticPaths() {
+  const work = await getCollection("work", ({ data }) => !data.draft);
+  return work.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+---
+<Page eyebrow="Case study" title={d.title} lede={d.result} description={d.result}>
+  <dl class="facts">
+    <div><dt>Client</dt><dd>{d.client}</dd></div>
+    <div><dt>Industry</dt><dd>{d.industry}</dd></div>
+    <div><dt>Duration</dt><dd>{d.duration}</dd></div>
+    <div><dt>Role</dt><dd>{d.role}</dd></div>
+    <div><dt>Stack</dt><dd>{d.stack.join(", ")}</dd></div>
+  </dl>
+
+  <div class="prose">
+    <Content />
+  </div>
+
+  <a class="btn btn-solid cta" href="/book">Have a similar problem?</a>
+</Page>
+
+<style>
+  .facts {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px; padding: 18px 20px; background: var(--sunk); border-radius: 2px; margin: 0 0 40px;
+  }
+  .facts dt { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .facts dd { margin: 3px 0 0; font-size: 14.5px; }
+  .cta { margin-top: 44px; }
+</style>

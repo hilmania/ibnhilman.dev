@@ -1,0 +1,33 @@
+---
+import Page from "../layouts/Page.astro";
+
+const groups = [
+  { label: "Editor & terminal", items: ["[isi]", "[isi]"] },
+  { label: "Stack default", items: ["Django + DRF", "React / HTMX", "PostgreSQL", "Docker"] },
+  { label: "Hosting", items: ["Cloudflare", "[isi]"] },
+  { label: "AI tools", items: ["[isi]"] },
+  { label: "Perangkat", items: ["[isi]"] },
+];
+---
+<Page
+  eyebrow="Uses"
+  title="Stack & tools"
+  lede="Apa yang benar-benar saya pakai sehari-hari. Diperbarui setiap kali ada yang berubah."
+>
+  <dl class="spec">
+    {groups.map((g) => (
+      <div>
+        <dt>{g.label}</dt>
+        <dd class="mono">{g.items.join(" · ")}</dd>
+      </div>
+    ))}
+  </dl>
+</Page>
+
+<style>
+  .spec { display: flex; flex-direction: column; gap: 0; margin: 0; }
+  .spec > div { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 18px; padding-block: 14px; border-bottom: 1px solid var(--line); }
+  dt { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+  dd { margin: 0; font-size: 13.5px; overflow-wrap: anywhere; }
+  @media (max-width: 560px) { .spec > div { grid-template-columns: 1fr; gap: 5px; } }
+</style>

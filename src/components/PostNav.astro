@@ -1,0 +1,38 @@
+---
+interface Props {
+  prev?: { slug: string; title: string };
+  next?: { slug: string; title: string };
+}
+const { prev, next } = Astro.props;
+---
+{(prev || next) && (
+  <nav class="postnav" aria-label="Artikel lain">
+    {prev ? (
+      <a href={`/blog/${prev.slug}`} class="side">
+        <span class="label">Sebelumnya</span>
+        <span class="t">{prev.title}</span>
+      </a>
+    ) : <span />}
+    {next && (
+      <a href={`/blog/${next.slug}`} class="side right">
+        <span class="label">Berikutnya</span>
+        <span class="t">{next.title}</span>
+      </a>
+    )}
+  </nav>
+)}
+
+<style>
+  .postnav {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line);
+  }
+  .side {
+    display: flex; flex-direction: column; gap: 5px;
+    text-decoration: none; color: inherit;
+    border: 1px solid var(--line); border-radius: 2px; padding: 14px 16px; min-width: 0;
+  }
+  .side:hover { background: var(--sunk); }
+  .right { text-align: right; }
+  .t { font-family: var(--display); font-weight: 700; font-size: 15px; }
+</style>

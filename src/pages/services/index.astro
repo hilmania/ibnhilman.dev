@@ -1,0 +1,69 @@
+---
+import { getCollection } from "astro:content";
+import Page from "../../layouts/Page.astro";
+import ServiceCard from "../../components/ServiceCard.astro";
+import { faq } from "../../site.config";
+
+const services = (await getCollection("services", ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+<Page
+  eyebrow="Services"
+  title="Fixed scope, written estimate, documented handover."
+  lede="Four ways to work together. Each one has a defined outcome and a starting price — no open-ended hourly billing."
+>
+  <div class="grid-auto">
+    {services.map((s) => (
+      <ServiceCard
+        title={s.data.title}
+        tagline={s.data.tagline}
+        priceFrom={s.data.priceFrom}
+        duration={s.data.duration}
+        href={`/services/${s.id}`}
+      />
+    ))}
+  </div>
+
+  <section class="fit">
+    <div>
+      <h2>Good fit</h2>
+      <ul>
+        <li>B2B startups and SMEs replacing spreadsheets with real systems</li>
+        <li>Consultants who need a technical partner they can put in front of a client</li>
+        <li>Companies with an internal app idea but no development team</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Not a fit</h2>
+      <ul>
+        <li>Brochure websites and landing pages</li>
+        <li>Crypto and NFT projects</li>
+        <li>Projects with no decision maker involved</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq">
+    <h2>Questions</h2>
+    {faq.map((item) => (
+      <div class="qa">
+        <h3>{item.q}</h3>
+        <p class="muted">{item.a}</p>
+      </div>
+    ))}
+  </section>
+
+  <a class="btn btn-solid cta" href="/book">Book a discovery call</a>
+</Page>
+
+<style>
+  .fit {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 26px; margin-top: 48px;
+  }
+  .fit ul { padding-left: 1.2em; margin-top: 12px; display: flex; flex-direction: column; gap: 8px; color: var(--muted); }
+  .faq { margin-top: 48px; display: flex; flex-direction: column; gap: 20px; }
+  .qa h3 { font-size: 16px; margin-bottom: 4px; }
+  .cta { margin-top: 36px; }
+</style>

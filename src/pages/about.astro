@@ -1,0 +1,34 @@
+---
+import Page from "../layouts/Page.astro";
+import { site } from "../site.config";
+---
+<Page
+  eyebrow="About"
+  title={site.name}
+  lede={`${site.role} di ${site.location}. Saya menulis scope-nya, membangunnya, mengujinya bersama pengguna, lalu menyerahkannya lengkap dengan dokumentasi.`}
+>
+  <div class="prose">
+    <h2>Dari mana saya datang</h2>
+    <p>
+      [Ganti bagian ini.] Ceritakan latar Anda: menggabungkan pengalaman presales dan
+      pengembangan, memimpin delivery proyek IT, dan dari situ belajar bahwa proyek
+      gagal bukan karena kodenya — tapi karena tidak ada yang menulis lingkupnya.
+    </p>
+
+    <h2>Cara saya bekerja</h2>
+    <ul>
+      <li><b>Scope sebelum kode.</b> Tidak ada baris kode sebelum ada dokumen yang disepakati.</li>
+      <li><b>Dokumentasi bagian dari produk.</b> Kalau tim Anda tidak bisa melanjutkan tanpa saya, pekerjaan saya belum selesai.</li>
+      <li><b>Teknologi membosankan, sistem andal.</b> Yang menarik untuk dipamerkan sering kali yang paling mahal untuk dirawat.</li>
+    </ul>
+
+    <h2>Di luar pekerjaan</h2>
+    <p>[Satu atau dua kalimat saja. Cukup untuk terasa manusiawi.]</p>
+  </div>
+
+  <a class="btn btn-solid cta" href="/book">Book a call</a>
+</Page>
+
+<style>
+  .cta { margin-top: 40px; }
+</style>

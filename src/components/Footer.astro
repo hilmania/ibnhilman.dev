@@ -1,0 +1,47 @@
+---
+import { site } from "../site.config";
+const year = new Date().getFullYear();
+const socials = Object.entries(site.social).filter(([, url]) => url);
+---
+<footer class="section">
+  <div class="wrap foot">
+    <div class="stack stack-sm">
+      <p class="label">Kontak</p>
+      <p class="mono email">{site.email}</p>
+      <p class="muted small">
+        {site.location} · {site.timezone} · biasanya membalas dalam {site.stats.responseHours} jam
+      </p>
+    </div>
+    <div class="stack stack-sm">
+      <p class="label">Situs</p>
+      {site.nav.map((i) => <a href={i.href}>{i.label}</a>)}
+      <a href="/uses">Uses</a>
+      <a href="/faq">FAQ</a>
+    </div>
+    <div class="stack stack-sm">
+      <p class="label">Lainnya</p>
+      {socials.map(([name, url]) => <a href={url} rel="me noopener">{name}</a>)}
+      <a href="/rss.xml">RSS</a>
+    </div>
+  </div>
+  <p class="wrap credit mono">© {year} {site.name}</p>
+</footer>
+
+<style>
+  .foot {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 26px;
+  }
+  .foot a {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--muted);
+    text-decoration: none;
+    width: fit-content;
+  }
+  .foot a:hover { color: var(--fg); }
+  .email { font-size: 13.5px; user-select: all; }
+  .small { font-size: 13px; }
+  .credit { font-size: 11px; color: var(--muted); margin-top: 28px; }
+</style>

@@ -1,0 +1,35 @@
+---
+import { categorySlug, formatDate } from "../lib/posts";
+
+interface Props {
+  slug: string;
+  title: string;
+  description: string;
+  date: Date;
+  category: string;
+  minutes: number;
+  hasVideo?: boolean;
+}
+const { slug, title, description, date, category, minutes, hasVideo = false } = Astro.props;
+---
+<article class="post">
+  <p class="meta mono">
+    <a class="cat" href={`/blog/category/${categorySlug(category)}`}>{category}</a>
+    <span>{formatDate(date)}</span>
+    <span>{minutes} min</span>
+    {hasVideo && <span class="video">video</span>}
+  </p>
+  <h2><a href={`/blog/${slug}`}>{title}</a></h2>
+  <p class="muted">{description}</p>
+</article>
+
+<style>
+  .post { padding-block: 22px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 7px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 11px; color: var(--muted); }
+  .cat { color: var(--accent); text-decoration: none; }
+  .cat:hover { text-decoration: underline; }
+  .video::before { content: "▶ "; }
+  h2 { font-size: 20px; }
+  h2 a { color: inherit; text-decoration: none; }
+  h2 a:hover { color: var(--accent); }
+</style>

@@ -1,0 +1,48 @@
+---
+import { getCollection, render } from "astro:content";
+import Page from "../../layouts/Page.astro";
+
+export async function getStaticPaths() {
+  const services = await getCollection("services", ({ data }) => !data.draft);
+  return services.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+---
+<Page eyebrow="Service" title={d.title} lede={d.tagline} description={d.tagline}>
+  <p class="price mono tabular">{d.priceFrom} · {d.duration}</p>
+
+  <section class="block">
+    <h2>What you get</h2>
+    <ul class="outcomes">
+      {d.outcomes.map((o) => <li>{o}</li>)}
+    </ul>
+  </section>
+
+  <div class="prose block">
+    <Content />
+  </div>
+
+  {d.notIncluded.length > 0 && (
+    <section class="block">
+      <h2>Not included</h2>
+      <ul class="muted plain">
+        {d.notIncluded.map((n) => <li>{n}</li>)}
+      </ul>
+    </section>
+  )}
+
+  <a class="btn btn-solid cta" href="/book">Book a call about this</a>
+</Page>
+
+<style>
+  .price { font-size: 13px; color: var(--accent); }
+  .block { margin-top: 40px; }
+  .outcomes { list-style: none; padding: 0; margin-top: 14px; display: flex; flex-direction: column; gap: 10px; max-width: var(--measure); }
+  .outcomes li { display: grid; grid-template-columns: auto 1fr; gap: 10px; }
+  .outcomes li::before { content: "→"; font-family: var(--mono); color: var(--accent); font-size: 13px; }
+  .plain { padding-left: 1.2em; margin-top: 12px; display: flex; flex-direction: column; gap: 7px; }
+  .cta { margin-top: 44px; }
+</style>

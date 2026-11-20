@@ -1,0 +1,74 @@
+---
+import { getCollection } from "astro:content";
+import Page from "../../layouts/Page.astro";
+import PostCard from "../../components/PostCard.astro";
+import Newsletter from "../../components/Newsletter.astro";
+import { readingTime, sortByDate, categorySlug } from "../../lib/posts";
+import { blogCategories } from "../../site.config";
+
+const RECENT = 20;
+
+const all = sortByDate(await getCollection("blog", ({ data }) => !data.draft));
+const posts = all.slice(0, RECENT);
+
+const counts = new Map<string, number>();
+for (const post of all) {
+  counts.set(post.data.category, (counts.get(post.data.category) ?? 0) + 1);
+}
+---
+<Page
+  eyebrow="Blog"
+  title="Writing"
+  lede="Catatan tentang membangun software B2B: apa yang dikirim, apa yang rusak, dan template yang dipakai."
+>
+  {all.length === 0 ? (
+    <p class="muted">
+      Belum ada artikel terbit. Jalankan <code>npm run new:post "Judul"</code>, tulis isinya,
+      lalu hapus <code>draft: true</code>.
+    </p>
+  ) : (
+    <>
+      <nav class="cats" aria-label="Kategori">
+        <span class="chip active">Semua ({all.length})</span>
+        {blogCategories.map((category) =>
+          counts.get(category) ? (
+            <a class="chip" href={`/blog/category/${categorySlug(category)}`}>
+              {category} ({counts.get(category)})
+            </a>
+          ) : null
+        )}
+      </nav>
+
+      <div class="list">
+        {posts.map((post) => (
+          <PostCard
+            slug={post.id}
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.date}
+            category={post.data.category}
+            minutes={readingTime(post.body)}
+            hasVideo={Boolean(post.data.video)}
+          />
+        ))}
+      </div>
+
+      {all.length > RECENT && (
+        <p class="more mono"><a href="/blog/archive">Lihat seluruh arsip ({all.length}) →</a></p>
+      )}
+    </>
+  )}
+
+  <Newsletter />
+</Page>
+
+<style>
+  .cats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .chip {
+    font-family: var(--mono); font-size: 11.5px; padding: 5px 11px; border-radius: 99px;
+    border: 1px solid var(--line); color: var(--muted); text-decoration: none;
+  }
+  .chip:hover { border-color: var(--muted); color: var(--fg); }
+  .chip.active { background: var(--fg); border-color: var(--fg); color: var(--bg); }
+  .more { margin-top: 26px; font-size: 12.5px; }
+</style>

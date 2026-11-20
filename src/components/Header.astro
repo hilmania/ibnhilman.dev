@@ -1,0 +1,60 @@
+---
+import { site } from "../site.config";
+const path = Astro.url.pathname;
+const isActive = (href: string) => path === href || path.startsWith(href + "/");
+---
+<header class="site-header">
+  <div class="wrap bar">
+    <a href="/" class="brand"><span class="brand-symbol" aria-hidden="true">✳</span>{site.name}</a>
+    <nav aria-label="Utama">
+      {site.nav.map((item) => (
+        <a href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>{item.label}</a>
+      ))}
+    </nav>
+    <a class="btn btn-solid hire" href="/book">Let's talk</a>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 30;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 12px 36px;
+    padding-block: 15px;
+  }
+  .brand {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .brand-symbol { color: var(--accent); font-size: 27px; line-height: 1; }
+  nav { display: flex; gap: clamp(14px, 2.5vw, 34px); flex-wrap: wrap; margin-left: auto; }
+  nav a {
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  nav a:hover, nav a[aria-current="page"] { color: var(--fg); }
+  .hire { padding: 9px 15px; font-size: 13px; white-space: nowrap; }
+  .hire span { margin-left: 12px; }
+  @media (max-width: 720px) {
+    .bar { flex-wrap: wrap; }
+    nav { order: 3; width: 100%; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 12px; }
+    .hire { margin-left: auto; }
+  }
+</style>

@@ -1,0 +1,119 @@
+---
+// Formulir kualifikasi. Dikirim ke /api/lead (lihat src/pages/api/lead.ts).
+// Pertanyaannya menyaring prospek sebelum call, sesuai wireframe.
+---
+<form id="lead-form" class="stack stack-md" novalidate>
+  <div class="row">
+    <label class="field">
+      <span>Nama</span>
+      <input id="lead-name" name="name" type="text" required autocomplete="name" />
+    </label>
+    <label class="field">
+      <span>Email</span>
+      <input id="lead-email" name="email" type="email" required autocomplete="email" />
+    </label>
+  </div>
+
+  <label class="field">
+    <span>Perusahaan</span>
+    <input id="lead-company" name="company" type="text" autocomplete="organization" />
+  </label>
+
+  <div class="row">
+    <label class="field">
+      <span>Jenis proyek</span>
+      <select id="lead-type" name="projectType" required>
+        <option value="">Pilih satu…</option>
+        <option>Internal system</option>
+        <option>SaaS MVP</option>
+        <option>Audit of an existing app</option>
+        <option>Infrastructure / self-hosted platform</option>
+        <option>Maintenance</option>
+        <option>Other</option>
+      </select>
+    </label>
+    <label class="field">
+      <span>Kisaran anggaran</span>
+      <select id="lead-budget" name="budget" required>
+        <option value="">Pilih satu…</option>
+        <option>&lt; $3k</option>
+        <option>$3k – $10k</option>
+        <option>$10k – $25k</option>
+        <option>$25k+</option>
+      </select>
+    </label>
+  </div>
+
+  <label class="field">
+    <span>Timeline</span>
+    <select id="lead-timeline" name="timeline" required>
+      <option value="">Pilih satu…</option>
+      <option>ASAP</option>
+      <option>1–3 months</option>
+      <option>Just exploring</option>
+    </select>
+  </label>
+
+  <label class="field">
+    <span>Ceritakan singkat masalahnya</span>
+    <textarea id="lead-message" name="message" rows="5" required></textarea>
+  </label>
+
+  <!-- honeypot: disembunyikan dari manusia, diisi oleh bot -->
+  <input id="lead-website" name="website" type="text" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
+
+  <button class="btn btn-solid" type="submit" id="lead-submit">Kirim</button>
+  <p id="lead-status" class="status mono" role="status" aria-live="polite"></p>
+</form>
+
+<style>
+  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+  .field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+  .field > span { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  input, select, textarea {
+    font: inherit; font-size: 15px;
+    padding: 10px 12px;
+    background: var(--surface);
+    color: var(--fg);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    width: 100%;
+  }
+  textarea { resize: vertical; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .status { font-size: 12.5px; min-height: 1.2em; }
+  .status[data-state="ok"] { color: var(--ok); }
+  .status[data-state="err"] { color: var(--crit); }
+</style>
+
+<script>
+  const form = document.getElementById("lead-form") as HTMLFormElement | null;
+  const status = document.getElementById("lead-status");
+  const button = document.getElementById("lead-submit") as HTMLButtonElement | null;
+
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!form.reportValidity() || !status || !button) return;
+
+    button.disabled = true;
+    status.dataset.state = "";
+    status.textContent = "Mengirim…";
+
+    try {
+      const response = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+      });
+      if (!response.ok) throw new Error(String(response.status));
+      form.reset();
+      status.dataset.state = "ok";
+      status.textContent = "Terkirim. Saya balas dalam 24 jam.";
+    } catch {
+      status.dataset.state = "err";
+      status.textContent = "Gagal mengirim. Kirim email langsung saja — alamatnya ada di footer.";
+    } finally {
+      button.disabled = false;
+    }
+  });
+</script>

@@ -1,0 +1,51 @@
+---
+import { getCollection, render } from "astro:content";
+import Page from "../../layouts/Page.astro";
+import TableOfContents from "../../components/TableOfContents.astro";
+import PostNav from "../../components/PostNav.astro";
+import Newsletter from "../../components/Newsletter.astro";
+import { readingTime, sortByDate, categorySlug, formatDate } from "../../lib/posts";
+
+export async function getStaticPaths() {
+  const posts = sortByDate(await getCollection("blog", ({ data }) => !data.draft));
+
+  return posts.map((entry, index) => ({
+    params: { slug: entry.id },
+    props: {
+      entry,
+      // Daftar urut dari terbaru, jadi "berikutnya" = index - 1.
+      newer: posts[index - 1]
+        ? { slug: posts[index - 1].id, title: posts[index - 1].data.title }
+        : undefined,
+      older: posts[index + 1]
+        ? { slug: posts[index + 1].id, title: posts[index + 1].data.title }
+        : undefined,
+    },
+  }));
+}
+
+const { entry, newer, older } = Astro.props;
+const { Content, headings } = await render(entry);
+const d = entry.data;
+const minutes = readingTime(entry.body);
+---
+<Page eyebrow={`${d.category} · ${formatDate(d.date)} · ${minutes} min`} title={d.title} description={d.description}>
+  <p class="toplinks mono">
+    <a href={`/blog/category/${categorySlug(d.category)}`}>{d.category}</a>
+    {d.video && <a href={d.video} rel="noopener">▶ Tonton versi videonya</a>}
+  </p>
+
+  <TableOfContents headings={headings} />
+
+  <article class="prose">
+    <Content />
+  </article>
+
+  <PostNav prev={older} next={newer} />
+  <Newsletter />
+</Page>
+
+<style>
+  .toplinks { display: flex; flex-wrap: wrap; gap: 18px; font-size: 12.5px; margin-bottom: 28px; }
+  .prose :global(h2), .prose :global(h3) { scroll-margin-top: 90px; }
+</style>
